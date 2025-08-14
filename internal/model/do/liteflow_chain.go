@@ -16,6 +16,7 @@ type LiteflowChain struct {
 	ChainId    interface{} // 链路ID
 	ChainName  interface{} // 链路名称
 	ChainDesc  interface{} // 链路描述
+	ChainDsl   interface{} // 链路dsl
 	ElData     interface{} // EL表达式数据
 	Enable     interface{} // 是否启用 1:启用 0:禁用
 	CreateTime *gtime.Time // 创建时间

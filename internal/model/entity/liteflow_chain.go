@@ -14,6 +14,7 @@ type LiteflowChain struct {
 	ChainId    string      `json:"chainId"    orm:"chain_id"    ` // 链路ID
 	ChainName  string      `json:"chainName"  orm:"chain_name"  ` // 链路名称
 	ChainDesc  string      `json:"chainDesc"  orm:"chain_desc"  ` // 链路描述
+	ChainDsl   string      `json:"chainDsl"   orm:"chain_dsl"   ` // 链路dsl
 	ElData     string      `json:"elData"     orm:"el_data"     ` // EL表达式数据
 	Enable     int         `json:"enable"     orm:"enable"      ` // 是否启用 1:启用 0:禁用
 	CreateTime *gtime.Time `json:"createTime" orm:"create_time" ` // 创建时间

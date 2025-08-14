@@ -25,6 +25,7 @@ type LiteflowChainColumns struct {
 	ChainId    string // 链路ID
 	ChainName  string // 链路名称
 	ChainDesc  string // 链路描述
+	ChainDsl   string // 链路dsl
 	ElData     string // EL表达式数据
 	Enable     string // 是否启用 1:启用 0:禁用
 	CreateTime string // 创建时间
@@ -37,6 +38,7 @@ var liteflowChainColumns = LiteflowChainColumns{
 	ChainId:    "chain_id",
 	ChainName:  "chain_name",
 	ChainDesc:  "chain_desc",
+	ChainDsl:   "chain_dsl",
 	ElData:     "el_data",
 	Enable:     "enable",
 	CreateTime: "create_time",

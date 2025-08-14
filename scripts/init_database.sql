@@ -1,5 +1,10 @@
 -- LiteFlow 数据库初始化脚本 (UUID版本)
--- 使用方法: mysql -u root -p < init_database_uuid.sql
+-- 使用方法: mysql -u root -p < init_database.sql
+
+-- 设置客户端字符集为utf8mb4
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+SET character_set_connection=utf8mb4;
 
 -- 创建数据库（如果不存在）
 CREATE DATABASE IF NOT EXISTS `liteflow` 
@@ -9,6 +14,10 @@ COLLATE utf8mb4_unicode_ci;
 -- 使用数据库
 USE `liteflow`;
 
+-- 设置数据库字符集
+SET character_set_database=utf8mb4;
+SET character_set_server=utf8mb4;
+
 -- 创建链路配置表
 DROP TABLE IF EXISTS `liteflow_chain`;
 CREATE TABLE `liteflow_chain` (
@@ -16,6 +25,7 @@ CREATE TABLE `liteflow_chain` (
   `chain_id` varchar(64) NOT NULL COMMENT '链路ID',
   `chain_name` varchar(128) NOT NULL COMMENT '链路名称',
   `chain_desc` text COMMENT '链路描述',
+  `chain_dsl` text NOT NULL COMMENT '链路dsl',
   `el_data` text NOT NULL COMMENT 'EL表达式数据',
   `enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用 1:启用 0:禁用',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -93,9 +103,9 @@ CREATE TABLE `liteflow_log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='LiteFlow执行日志表';
 
 -- 插入示例数据（使用UUID函数生成ID）
-INSERT INTO `liteflow_chain` (`id`, `chain_id`, `chain_name`, `chain_desc`, `el_data`) VALUES
-(UUID(), 'test_chain', '测试链路', '这是一个测试用的简单链路', 'THEN(a, b, c)'),
-(UUID(), 'complex_chain', '复杂业务链路', '包含条件判断和循环的复杂链路', 'THEN(a, IF(x, THEN(b, c), d), e)');
+INSERT INTO `liteflow_chain` (`id`, `chain_id`, `chain_name`, `chain_desc`, `chain_dsl`, `el_data`) VALUES
+(UUID(), 'test_chain', '测试链路', '这是一个测试用的简单链路', '{"nodes": [{"id": "a", "name": "节点A", "type": "common"}, {"id": "b", "name": "节点B", "type": "common"}, {"id": "c", "name": "节点C", "type": "common"}]}', 'THEN(a, b, c)'),
+(UUID(), 'complex_chain', '复杂业务链路', '包含条件判断和循环的复杂链路', '{"nodes": [{"id": "a", "name": "节点A", "type": "common"}, {"id": "b", "name": "节点B", "type": "common"}, {"id": "c", "name": "节点C", "type": "common"}, {"id": "d", "name": "节点D", "type": "common"}, {"id": "e", "name": "节点E", "type": "common"}, {"id": "x", "name": "条件节点X", "type": "switch"}]}', 'THEN(a, IF(x, THEN(b, c), d), e)');
 
 INSERT INTO `liteflow_node` (`id`, `node_id`, `node_name`, `node_type`, `node_desc`) VALUES
 (UUID(), 'a', '节点A', 'common', '普通业务节点A'),

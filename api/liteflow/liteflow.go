@@ -11,5 +11,6 @@ import (
 )
 
 type ILiteflowV1 interface {
+	GetLiteflowChain(ctx context.Context, req *v1.GetLiteflowChainReq) (res *v1.GetLiteflowChainRes, err error)
 	AddLiteflowChain(ctx context.Context, req *v1.AddLiteflowChainReq) (res *v1.AddLiteflowChainRes, err error)
 }
