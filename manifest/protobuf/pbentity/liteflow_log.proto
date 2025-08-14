@@ -1,0 +1,26 @@
+// ==========================================================================
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT.
+// ==========================================================================
+
+syntax = "proto3";
+
+package entity;
+
+option go_package = "entity";
+
+import "google/protobuf/timestamp.proto";
+
+message LiteflowLog {
+    string                    Id            = 1   [json_name = "id"];            // 主键ID(UUID)
+    string                    RequestId     = 2   [json_name = "requestId"];     // 请求ID
+    string                    ChainId       = 3   [json_name = "chainId"];       // 链路ID
+    string                    ChainName     = 4   [json_name = "chainName"];     // 链路名称
+    string                    NodeId        = 5   [json_name = "nodeId"];        // 节点ID
+    string                    NodeName      = 6   [json_name = "nodeName"];      // 节点名称
+    string                    ExecuteStatus = 7   [json_name = "executeStatus"]; // 执行状态(SUCCESS,FAILED,RUNNING)
+    int64                     ExecuteTime   = 8   [json_name = "executeTime"];   // 执行耗时(毫秒)
+    string                    ErrorMsg      = 9   [json_name = "errorMsg"];      // 错误信息
+    string                    InputData     = 10  [json_name = "inputData"];     // 输入数据
+    string                    OutputData    = 11  [json_name = "outputData"];    // 输出数据
+    google.protobuf.Timestamp CreateTime    = 12  [json_name = "createTime"];    // 创建时间
+}

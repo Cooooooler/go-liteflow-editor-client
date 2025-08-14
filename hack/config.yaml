@@ -2,3 +2,14 @@
 # CLI tool, only in development environment.
 # https://goframe.org/pages/viewpage.action?pageId=3673173
 gfcli:
+  gen:
+    dao:
+    - link:     "mysql:root:@tcp(127.0.0.1:3306)/liteflow"
+      tables:   "liteflow_chain,liteflow_script,liteflow_node,liteflow_log"
+      jsonCase: "CamelLower"
+      
+    pbentity:
+    - link:     "mysql:root:@tcp(127.0.0.1:3306)/liteflow"
+      tables:   "liteflow_chain,liteflow_script,liteflow_node,liteflow_log"
+      jsonCase: "CamelLower"
+      package:  "entity"

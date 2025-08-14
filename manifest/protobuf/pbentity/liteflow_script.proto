@@ -1,0 +1,23 @@
+// ==========================================================================
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT.
+// ==========================================================================
+
+syntax = "proto3";
+
+package entity;
+
+option go_package = "entity";
+
+import "google/protobuf/timestamp.proto";
+
+message LiteflowScript {
+    string                    Id         = 1   [json_name = "id"];         // 主键ID(UUID)
+    string                    ScriptId   = 2   [json_name = "scriptId"];   // 脚本ID
+    string                    ScriptName = 3   [json_name = "scriptName"]; // 脚本名称
+    string                    ScriptType = 4   [json_name = "scriptType"]; // 脚本类型(groovy,js,python等)
+    string                    ScriptData = 5   [json_name = "scriptData"]; // 脚本内容
+    string                    ScriptDesc = 6   [json_name = "scriptDesc"]; // 脚本描述
+    int32                     Enable     = 7   [json_name = "enable"];     // 是否启用 1:启用 0:禁用
+    google.protobuf.Timestamp CreateTime = 8   [json_name = "createTime"]; // 创建时间
+    google.protobuf.Timestamp UpdateTime = 9   [json_name = "updateTime"]; // 更新时间
+}
