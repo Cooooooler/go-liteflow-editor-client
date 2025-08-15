@@ -24,8 +24,6 @@ type Chain struct {
 
 type GetLiteflowChainRes struct {
 	g.Meta   `mime:"application/json"`
-	Code     int     `json:"code" dc:"状态码"`
-	Message  string  `json:"message" dc:"返回消息"`
 	Data     []Chain `json:"data" dc:"返回数据"`
 	PageInfo struct {
 		CurrentPage int `json:"currentPage" dc:"当前页码"`

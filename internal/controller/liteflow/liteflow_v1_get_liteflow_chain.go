@@ -4,35 +4,24 @@ import (
 	"context"
 
 	"github.com/gogf/gf/v2/frame/g"
-	"github.com/gogf/gf/v2/util/gpage"
 
 	v1 "go-liteflow-editor-client/api/liteflow/v1"
 	"go-liteflow-editor-client/internal/dao"
 	"go-liteflow-editor-client/internal/model/entity"
+	"go-liteflow-editor-client/utility"
 )
 
 func (c *ControllerV1) GetLiteflowChain(ctx context.Context, req *v1.GetLiteflowChainReq) (res *v1.GetLiteflowChainRes, err error) {
-	// 初始化响应
-	res = &v1.GetLiteflowChainRes{
-		Code:    200,
-		Message: "success",
-		Data:    []v1.Chain{},
-	}
+	res = &v1.GetLiteflowChainRes{}
 
-	// 设置默认分页参数
-	page := req.Page
-	if page <= 0 {
-		page = 1
-	}
-	pageSize := req.PageSize
-	if pageSize <= 0 {
-		pageSize = 10
-	}
-
-	// 限制分页大小，防止查询过多数据
-	if pageSize > 100 {
-		pageSize = 100
-	}
+	// 使用分页工具包验证和修复分页参数
+	paginationParams := utility.ValidateAndFixPagination(
+		&utility.PaginationParams{
+			Page:     req.Page,
+			PageSize: req.PageSize,
+		},
+		nil, // 使用默认选项
+	)
 
 	// 构建查询模型
 	model := dao.LiteflowChain.Ctx(ctx).Where("enable", 1) // 只查询启用的链路
@@ -46,35 +35,29 @@ func (c *ControllerV1) GetLiteflowChain(ctx context.Context, req *v1.GetLiteflow
 	total, err := model.Count()
 	if err != nil {
 		g.Log().Errorf(ctx, "GetLiteflowChain: 查询总数失败: %v", err)
-		res.Code = 500
-		res.Message = "查询总数失败"
 		return res, nil
 	}
 
 	// 如果没有数据，直接返回空结果
 	if total == 0 {
 		g.Log().Infof(ctx, "GetLiteflowChain: 没有找到符合条件的链路数据")
-		// 设置分页信息
-		res.PageInfo.CurrentPage = page
-		res.PageInfo.PageSize = pageSize
-		res.PageInfo.Total = 0
-		res.PageInfo.TotalPage = 0
+		// 使用分页工具包计算分页信息
+		paginationInfo := utility.CalculatePaginationInfo(0, paginationParams)
+		res.PageInfo.CurrentPage = paginationInfo.CurrentPage
+		res.PageInfo.PageSize = paginationInfo.PageSize
+		res.PageInfo.Total = paginationInfo.Total
+		res.PageInfo.TotalPage = paginationInfo.TotalPage
 		return res, nil
 	}
 
-	// 使用 gpage 创建分页对象
-	pager := gpage.New(total, pageSize, page, "")
-
-	// 计算偏移量
-	offset := (page - 1) * pageSize
+	// 使用分页工具包计算偏移量
+	offset := utility.CalculateOffset(paginationParams.Page, paginationParams.PageSize)
 
 	// 分页查询
 	var chains []entity.LiteflowChain
-	err = model.Page(offset, pageSize).Order("create_time DESC").Scan(&chains)
+	err = model.Page(offset, paginationParams.PageSize).Order("create_time DESC").Scan(&chains)
 	if err != nil {
 		g.Log().Errorf(ctx, "GetLiteflowChain: 查询数据失败: %v", err)
-		res.Code = 500
-		res.Message = "查询数据失败"
 		return res, nil
 	}
 
@@ -105,15 +88,16 @@ func (c *ControllerV1) GetLiteflowChain(ctx context.Context, req *v1.GetLiteflow
 
 	res.Data = chainList
 
-	// 设置分页信息
-	res.PageInfo.CurrentPage = pager.CurrentPage
-	res.PageInfo.PageSize = pageSize
-	res.PageInfo.Total = pager.TotalSize
-	res.PageInfo.TotalPage = pager.TotalPage
+	// 使用分页工具包计算分页信息
+	paginationInfo := utility.CalculatePaginationInfo(total, paginationParams)
+	res.PageInfo.CurrentPage = paginationInfo.CurrentPage
+	res.PageInfo.PageSize = paginationInfo.PageSize
+	res.PageInfo.Total = paginationInfo.Total
+	res.PageInfo.TotalPage = paginationInfo.TotalPage
 
 	// 记录成功日志
 	g.Log().Infof(ctx, "GetLiteflowChain: 查询成功，总数: %d, 当前页: %d, 每页大小: %d, 返回数据条数: %d",
-		total, page, pageSize, len(chainList))
+		total, paginationParams.Page, paginationParams.PageSize, len(chainList))
 
 	return res, nil
 }

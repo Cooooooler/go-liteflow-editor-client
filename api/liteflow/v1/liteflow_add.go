@@ -11,8 +11,6 @@ type AddLiteflowChainReq struct {
 }
 
 type AddLiteflowChainRes struct {
-	g.Meta  `mime:"application/json"`
-	Code    int         `json:"code" dc:"状态码"`
-	Message string      `json:"message" dc:"返回消息"`
-	Data    interface{} `json:"data" dc:"返回数据"`
+	g.Meta `mime:"application/json"`
+	Data   interface{} `json:"data" dc:"返回数据"`
 }
