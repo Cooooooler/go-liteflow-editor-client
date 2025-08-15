@@ -66,6 +66,7 @@ func (c *ControllerV1) GetLiteflowChain(ctx context.Context, req *v1.GetLiteflow
 	for _, chain := range chains {
 		chainItem := v1.Chain{
 			Id:         chain.Id,
+			ChainId:    chain.ChainId,
 			ChainName:  chain.ChainName,
 			ChainDesc:  chain.ChainDesc,
 			ChainDsl:   chain.ChainDsl,

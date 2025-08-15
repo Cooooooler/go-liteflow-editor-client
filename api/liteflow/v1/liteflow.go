@@ -13,6 +13,7 @@ type GetLiteflowChainReq struct {
 
 type Chain struct {
 	Id         string `json:"id" dc:"id"`
+	ChainId    string `json:"chainId" dc:"链id"`
 	ChainName  string `json:"chainName" dc:"链名称"`
 	ChainDesc  string `json:"chainDesc" dc:"链描述"`
 	ChainDsl   string `json:"chainDsl" dc:"链dsl"`
