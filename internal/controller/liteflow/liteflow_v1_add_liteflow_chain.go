@@ -16,24 +16,24 @@ import (
 	"github.com/google/uuid"
 )
 
-// AddLiteflowChain 新增LiteFlow链路
-//
-// 该方法用于创建新的LiteFlow执行链路，包含以下功能：
-// 1. 输入参数验证（链名称和描述不能为空）
-// 2. 生成唯一的UUID作为主键ID
-// 3. 生成唯一的ChainId（使用时间戳+随机数）
-// 4. 设置默认的ChainDsl和ElData
-// 5. 检查链名称唯一性
-// 6. 使用事务确保数据一致性
-// 7. 返回完整的链路信息
-//
-// 参数:
-//   - ctx: 上下文信息
-//   - req: 新增链路请求参数，包含链名称和描述
-//
-// 返回值:
-//   - res: 新增链路的响应信息，包含完整的链路数据
-//   - err: 错误信息，如果成功则为nil
+/*
+* AddLiteflowChain 新增LiteFlow链路
+* 该方法用于创建新的LiteFlow执行链路，包含以下功能：
+* 1. 输入参数验证（链名称和描述不能为空）
+* 2. 生成唯一的UUID作为主键ID
+* 3. 生成唯一的ChainId（使用时间戳+随机数）
+* 4. 设置默认的ChainDsl和ElData
+* 5. 检查链名称唯一性
+* 6. 使用事务确保数据一致性
+* 7. 返回完整的链路信息
+* 参数:
+*   - ctx: 上下文信息
+*   - req: 新增链路请求参数，包含链名称和描述
+* 返回值:
+*   - res: 新增链路的响应信息，包含完整的链路数据
+*   - err: 错误信息，如果成功则为nil
+ */
+
 func (c *ControllerV1) AddLiteflowChain(ctx context.Context, req *v1.AddLiteflowChainReq) (res *v1.AddLiteflowChainRes, err error) {
 	res = &v1.AddLiteflowChainRes{}
 
@@ -75,7 +75,13 @@ func (c *ControllerV1) AddLiteflowChain(ctx context.Context, req *v1.AddLiteflow
 		existingChain := &entity.LiteflowChain{}
 		err := dao.LiteflowChain.Ctx(ctx).TX(tx).Where("chain_name", req.ChainName).Scan(existingChain)
 		if err != nil {
-			return fmt.Errorf("检查链名称唯一性失败: %v", err)
+			// 如果没有找到记录，说明链名称是唯一的，这是正常情况
+			if err.Error() == "sql: no rows in result set" {
+				// 链名称唯一，可以继续创建新链路
+			} else {
+				// 其他数据库错误
+				return fmt.Errorf("检查链名称唯一性失败: %v", err)
+			}
 		}
 
 		if existingChain.Id != "" {

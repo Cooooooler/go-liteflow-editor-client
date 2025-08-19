@@ -16,22 +16,22 @@ import (
 	"go-liteflow-editor-client/internal/model/entity"
 )
 
-// UpdateLiteflowChain 更新LiteFlow链路
-//
-// 该方法用于更新现有的LiteFlow执行链路，包含以下功能：
-// 1. 输入参数验证（ID和ChainId不能为空）
-// 2. 检查链路是否存在
-// 3. 验证链名称唯一性（如果修改了链名称）
-// 4. 使用事务确保数据一致性
-// 5. 更新链路信息并返回完整的链路数据
-//
-// 参数:
-//   - ctx: 上下文信息
-//   - req: 更新链路请求参数，包含要更新的链路信息
-//
-// 返回值:
-//   - res: 更新后链路的响应信息，包含完整的链路数据
-//   - err: 错误信息，如果成功则为nil
+/*
+* UpdateLiteflowChain 更新LiteFlow链路
+* 该方法用于更新现有的LiteFlow执行链路，包含以下功能：
+* 1. 输入参数验证（ID和ChainId不能为空）
+* 2. 检查链路是否存在
+* 3. 验证链名称唯一性（如果修改了链名称）
+* 4. 使用事务确保数据一致性
+* 5. 更新链路信息并返回完整的链路数据
+* 参数:
+*   - ctx: 上下文信息
+*   - req: 更新链路请求参数，包含要更新的链路信息
+* 返回值:
+*   - res: 更新后链路的响应信息，包含完整的链路数据
+*   - err: 错误信息，如果成功则为nil
+ */
+
 func (c *ControllerV1) UpdateLiteflowChain(ctx context.Context, req *v1.UpdateLiteflowChainReq) (res *v1.UpdateLiteflowChainRes, err error) {
 	res = &v1.UpdateLiteflowChainRes{}
 
@@ -48,8 +48,8 @@ func (c *ControllerV1) UpdateLiteflowChain(ctx context.Context, req *v1.UpdateLi
 	// 使用事务确保数据一致性
 	err = dao.LiteflowChain.Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
 		// 检查链路是否存在
-		var existingChain entity.LiteflowChain
-		err := dao.LiteflowChain.Ctx(ctx).TX(tx).Where("id", req.Id).Scan(&existingChain)
+		existingChain := &entity.LiteflowChain{}
+		err := dao.LiteflowChain.Ctx(ctx).TX(tx).Where("id", req.Id).Scan(existingChain)
 		if err != nil {
 			return fmt.Errorf("查询链路失败: %v", err)
 		}
