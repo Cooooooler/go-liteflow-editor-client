@@ -16,3 +16,21 @@ database:
 logger:
   level : "all"
   stdout: true
+
+# 应用配置文件
+# 定时任务配置
+cron:
+  cleanup:
+    # 是否启用定时清理任务
+    enable: true
+    # 是否在启动时立即执行一次清理任务
+    runOnStartup: true
+    # cron表达式，默认每天凌晨2点执行
+    # 格式：秒 分 时 日 月 周
+    # 示例：
+    # "0 0 2 * * *" - 每天凌晨2点
+    # "0 0 */6 * * *" - 每6小时执行一次
+    # "0 0 0 * * 0" - 每周日凌晨执行
+    expression: "0 0 2 * * *"
+    # 清理任务执行超时时间（秒）
+    timeout: 300
