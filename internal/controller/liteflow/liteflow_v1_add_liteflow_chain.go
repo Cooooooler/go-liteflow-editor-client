@@ -72,12 +72,36 @@ func (c *ControllerV1) AddLiteflowChain(ctx context.Context, req *v1.AddLiteflow
 	// 使用事务确保数据一致性
 	err = dao.LiteflowChain.Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
 		// 检查链名称是否已存在
-		count, err := dao.LiteflowChain.Ctx(ctx).TX(tx).Where("chain_name", req.ChainName).Count()
+		existingChain := &entity.LiteflowChain{}
+		err := dao.LiteflowChain.Ctx(ctx).TX(tx).Where("chain_name", req.ChainName).Scan(existingChain)
 		if err != nil {
 			return fmt.Errorf("检查链名称唯一性失败: %v", err)
 		}
-		if count > 0 {
-			return fmt.Errorf("链名称已存在")
+
+		if existingChain.Id != "" {
+			// 链名称已存在
+			if existingChain.Enable == constant.StatusDisabled {
+				// 如果Enable为0，则设置为1
+				_, err = dao.LiteflowChain.Ctx(ctx).TX(tx).Data(g.Map{
+					"enable":      constant.StatusEnabled,
+					"update_time": gtime.Now(),
+				}).Where("id", existingChain.Id).Update()
+				if err != nil {
+					return fmt.Errorf("更新链路状态失败: %v", err)
+				}
+
+				// 更新existingChain的Enable字段，用于后续返回
+				existingChain.Enable = constant.StatusEnabled
+				existingChain.UpdateTime = gtime.Now()
+
+				// 将existingChain赋值给chain，用于后续返回
+				chain = *existingChain
+
+				g.Log().Infof(ctx, "AddLiteflowChain: 链名称已存在且已禁用，已重新启用，ID: %s", existingChain.Id)
+				return nil
+			} else {
+				return fmt.Errorf("链名称已存在且已启用")
+			}
 		}
 
 		// 插入新链路
@@ -104,7 +128,14 @@ func (c *ControllerV1) AddLiteflowChain(ctx context.Context, req *v1.AddLiteflow
 	res.Data.Enable = chain.Enable
 	res.Data.CreateTime = chain.CreateTime.Format("2006-01-02 15:04:05")
 
-	g.Log().Infof(ctx, "AddLiteflowChain: 成功新增链路，ID: %s, ChainId: %s, ChainName: %s", id, chainId, req.ChainName)
+	// 根据操作类型记录不同的日志
+	if chain.Id == id {
+		// 新创建的链路
+		g.Log().Infof(ctx, "AddLiteflowChain: 成功新增链路，ID: %s, ChainId: %s, ChainName: %s", id, chainId, req.ChainName)
+	} else {
+		// 重新启用的现有链路
+		g.Log().Infof(ctx, "AddLiteflowChain: 成功重新启用现有链路，ID: %s, ChainId: %s, ChainName: %s", chain.Id, chain.ChainId, req.ChainName)
+	}
 
 	return res, nil
 }
