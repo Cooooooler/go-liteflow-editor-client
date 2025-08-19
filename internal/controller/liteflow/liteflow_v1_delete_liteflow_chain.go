@@ -11,21 +11,21 @@ import (
 	"go-liteflow-editor-client/internal/model/entity"
 )
 
-// DeleteLiteflowChain 删除LiteFlow链路
-//
-// 该方法用于删除指定的LiteFlow执行链路，包含以下功能：
-// 1. 输入参数验证（ID和ChainId不能为空）
-// 2. 检查链路是否存在
-// 3. 执行软删除（将enable字段设置为0）
-// 4. 返回删除结果
-//
-// 参数:
-//   - ctx: 上下文信息
-//   - req: 删除链路请求参数，包含ID和ChainId
-//
-// 返回值:
-//   - res: 删除链路的响应信息，包含被删除的链路数据
-//   - err: 错误信息，如果成功则为nil
+/*
+* DeleteLiteflowChain 删除LiteFlow链路
+* 该方法用于删除指定的LiteFlow执行链路，包含以下功能：
+* 1. 输入参数验证（ID和ChainId不能为空）
+* 2. 检查链路是否存在
+* 3. 执行软删除（将enable字段设置为0）
+* 4. 返回删除结果
+* 参数:
+*   - ctx: 上下文信息
+*   - req: 删除链路请求参数，包含ID和ChainId
+* 返回值:
+*   - res: 删除链路的响应信息，包含被删除的链路数据
+*   - err: 错误信息，如果成功则为nil
+ */
+
 func (c *ControllerV1) DeleteLiteflowChain(ctx context.Context, req *v1.DeleteLiteflowChainReq) (res *v1.DeleteLiteflowChainRes, err error) {
 	res = &v1.DeleteLiteflowChainRes{}
 
