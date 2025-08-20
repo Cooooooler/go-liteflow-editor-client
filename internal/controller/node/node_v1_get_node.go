@@ -50,6 +50,7 @@ func (c *ControllerV1) GetNode(ctx context.Context, req *v1.GetNodeReq) (res *v1
 		res.PageInfo.PageSize = paginationInfo.PageSize
 		res.PageInfo.Total = paginationInfo.Total
 		res.PageInfo.TotalPage = paginationInfo.TotalPage
+		res.Data = []v1.NodeTag{} // 确保返回空数组而不是null
 		return res, nil
 	}
 

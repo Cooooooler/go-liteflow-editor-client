@@ -47,6 +47,7 @@ func (c *ControllerV1) GetLiteflowChain(ctx context.Context, req *v1.GetLiteflow
 		res.PageInfo.PageSize = paginationInfo.PageSize
 		res.PageInfo.Total = paginationInfo.Total
 		res.PageInfo.TotalPage = paginationInfo.TotalPage
+		res.Data = []v1.Chain{}
 		return res, nil
 	}
 
