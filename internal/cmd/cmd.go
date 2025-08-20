@@ -8,6 +8,7 @@ import (
 	"github.com/gogf/gf/v2/os/gcmd"
 
 	"go-liteflow-editor-client/internal/controller/liteflow"
+	"go-liteflow-editor-client/internal/controller/node"
 	"go-liteflow-editor-client/internal/service"
 )
 
@@ -26,6 +27,7 @@ var (
 				group.Middleware(ghttp.MiddlewareHandlerResponse)
 				group.Bind(
 					liteflow.NewV1(),
+					node.NewV1(),
 				)
 			})
 			s.Run()

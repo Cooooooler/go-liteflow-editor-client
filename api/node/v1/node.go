@@ -6,6 +6,7 @@ import (
 
 type GetNodeReq struct {
 	g.Meta    `path:"/api/getNode" tags:"Node" method:"get" summary:"获取节点标签"`
+	NodeType  string `json:"nodeType" dc:"节点类型"`
 	SearchKey string `json:"searchKey" dc:"搜索关键字"`
 	Page      int    `json:"page" dc:"页码"`
 	PageSize  int    `json:"pageSize" dc:"每页条数"`

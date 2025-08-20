@@ -12,5 +12,5 @@ main
 output/
 manifest/output/
 temp/
-logs/
+var/log/
 main.exe
